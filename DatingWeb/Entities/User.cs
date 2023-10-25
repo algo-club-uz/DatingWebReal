@@ -1,9 +1,11 @@
-﻿using DatingWeb.Entities.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using DatingWeb.Entities.Enums;
 
 namespace DatingWeb.Entities;
 
 public class User
 {
+    [Key]
     public Guid UserId { get; set; }
 
     public required string FirstName { get; set; }
@@ -11,13 +13,11 @@ public class User
 
     public required string Email { get; set; }
     public bool? EmailConfirmed { get; set; } = false;
-
-    public required string Password { get; set; }
-    public required string ConfirmationPassword { get; set; }
+    public string PasswordHash { get; set; }
 
     public string? Country { get; set; }
     public string? PhotoUrl { get; set; }
-    public required int Age { get; set; }
+    public  int Age { get; set; }
     public  EGender Gender { get; set; }
 
 
