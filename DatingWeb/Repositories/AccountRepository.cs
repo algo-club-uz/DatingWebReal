@@ -1,78 +1,53 @@
-﻿using DatingWeb.Entities;
+﻿using DatingWeb.Context;
+using DatingWeb.Entities;
 using DatingWeb.Exceptions;
 using DatingWeb.Models;
 using DatingWeb.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace DatingWeb.Repositories;
 
 public class AccountRepository: IAccountRepository
 {
-    //private readonly IUserRepository _userRepository;
-    //private readonly JwtTokenManager _jwtTokenManager;
+    private readonly AppDbContext _identityDbContext;
 
-    /*public UserManager(JwtTokenManager jwtTokenManager, IUserRepository userRepository)
+    public AccountRepository(AppDbContext identityDbContext)
     {
-        _jwtTokenManager = jwtTokenManager;
-        _userRepository = userRepository;
-    }*/
+        _identityDbContext = identityDbContext;
+    }
 
-
-    public async Task<UserModel> Register(CreateUserModel model)
+    public async Task AddUser(User user)
     {
-        if (await _userRepository.IsUserNameExist(model.Username))
+        await _identityDbContext.Users.AddAsync(user);
+        await _identityDbContext.SaveChangesAsync();
+    }
+
+    public async Task<User> GetUserByUserName(string username)
+    {
+        var user = await _identityDbContext.Users.FirstOrDefaultAsync(i => i.Email == username);
+        if (user == null)
         {
-            throw new UsernameExistException(model.Username);
+            throw new UserNotFoundException(username);
         }
-        var user = new User()
-        {
-            FirstName = model.Firstname,
-            LastName = model.Lastname,
-            Email = model.Username,
-            //UserRole = ERole.User
-        };
-
-        user.PasswordHash = new PasswordHasher<User>().HashPassword(user, model.Password);
-        await _userRepository.AddUser(user);
-        return ParseToUserModel(user);
+        return user;
     }
 
-    public async Task<string> Login(LoginUserModel model)
+    public async Task<User> GetUserById(Guid userId)
     {
-        var userName = await _userRepository.GetUserByUserName(model.Username);
-        var result = new PasswordHasher<User>().
-            VerifyHashedPassword(userName, userName.PasswordHash, model.Password);
-
-        if (result == PasswordVerificationResult.Failed)
+        var user = await _identityDbContext.Users.FirstOrDefaultAsync(i => i.UserId == userId);
+        if (user == null)
         {
-            throw new InCorrectPassword(model.Password);
+            throw new UserNotFoundException(userId.ToString());
         }
-        var token = _jwtTokenManager.GenerateToken(userName);
-        return token;
+
+        return user;
+    }
+    public async Task<bool> IsUserNameExist(string userName)
+    {
+        var isExists = await _identityDbContext.Users.
+            Where(i => i.Email == userName).AnyAsync();
+        return isExists;
     }
 
-    public async Task<UserModel?> GetUser(string username)
-    {
-        var user = await _userRepository.GetUserByUserName(username);
-        return ParseToUserModel(user);
-    }
-    public async Task<UserModel?> GetUser(Guid id)
-    {
-        var user = await _userRepository.GetUserById(id);
-        return ParseToUserModel(user);
-    }
-
-    private UserModel ParseToUserModel(User user)
-    {
-        var model = new UserModel()
-        {
-            UserId = user.UserId,
-            Firstname = user.FirstName,
-            Lastname = user.LastName,
-            //CreateDate = user.CreateDate,
-            Username = user.Email,
-            //UserRole = user.UserRole
-        };
-        return model;
-    }
 }
