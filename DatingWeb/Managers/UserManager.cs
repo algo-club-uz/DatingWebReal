@@ -29,6 +29,9 @@ public class UserManager
             FirstName = model.Firstname,
             LastName = model.Lastname,
             Email = model.Username,
+            Age = model.Age,
+            Country = model.Country,
+            Gender = model.Gender,
             //UserRole = ERole.User
         };
 
@@ -69,7 +72,7 @@ public class UserManager
             UserId = user.UserId,
             Firstname = user.FirstName,
             Lastname = user.LastName,
-            //CreateDate = user.CreateDate,
+            CreateDate = user.CreateDate,
             Username = user.Email,
             //UserRole = user.UserRole
         };
