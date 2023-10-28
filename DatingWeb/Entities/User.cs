@@ -21,5 +21,7 @@ public class User
     public  EGender Gender { get; set; }
     public DateTime CreateDate { get; set; } = DateTime.UtcNow;
 
+    public List<Chat> Chats { get; set; }
+
 
 }
