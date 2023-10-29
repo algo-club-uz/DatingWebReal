@@ -1,6 +1,5 @@
 ﻿using DatingWeb.Entities;
 using DatingWeb.Entities.Enums;
-using DatingWeb.Models;
 
 namespace DatingWeb.Repositories.Interfaces;
 
