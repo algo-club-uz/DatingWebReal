@@ -2,9 +2,7 @@
 using DatingWeb.Entities;
 using DatingWeb.Entities.Enums;
 using DatingWeb.Exceptions;
-using DatingWeb.Models;
 using DatingWeb.Repositories.Interfaces;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingWeb.Repositories;
