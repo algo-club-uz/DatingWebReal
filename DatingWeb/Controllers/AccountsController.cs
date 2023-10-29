@@ -24,6 +24,24 @@ public class AccountsController : ControllerBase
         _userProvider = userProvider;
     }
 
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> AllGetUsers()
+    {
+        var userId = _userProvider.UserId;
+        try
+        {
+            var user = await _userManager.GetUser(userId);
+            var users = _userManager.GetAllUser(user.UserId, user.Gender);
+            return Ok(user);
+
+        }
+        catch (UserNotFoundException e)
+        {
+            return Unauthorized();
+        }
+    }
+
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] CreateUserModel model)
     {
