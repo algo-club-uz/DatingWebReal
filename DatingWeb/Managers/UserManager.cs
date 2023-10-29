@@ -1,4 +1,5 @@
 ﻿using DatingWeb.Entities;
+using DatingWeb.Entities.Enums;
 using DatingWeb.Exceptions;
 using DatingWeb.Models;
 using DatingWeb.Repositories.Interfaces;
@@ -52,6 +53,17 @@ public class UserManager
         }
         var token = _jwtTokenManager.GenerateToken(userName);
         return token;
+    }
+
+    public async Task<List<UserModel>> GetAllUser(Guid userId,EGender gender)
+    {
+        var users = await _userRepository.GetAllUser(userId,gender);
+        var userModels = new List<UserModel>();
+         foreach (var user in users)
+         {
+             userModels.Add(ParseToUserModel(user));
+         }
+         return userModels;
     }
 
     public async Task<UserModel?> GetUser(string username)

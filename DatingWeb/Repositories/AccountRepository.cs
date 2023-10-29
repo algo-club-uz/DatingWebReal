@@ -1,5 +1,6 @@
 ﻿using DatingWeb.Context;
 using DatingWeb.Entities;
+using DatingWeb.Entities.Enums;
 using DatingWeb.Exceptions;
 using DatingWeb.Models;
 using DatingWeb.Repositories.Interfaces;
@@ -15,6 +16,11 @@ public class AccountRepository: IAccountRepository
     public AccountRepository(AppDbContext identityDbContext)
     {
         _identityDbContext = identityDbContext;
+    }
+
+    public async Task<List<User>> GetAllUser(Guid userId,EGender gender)
+    {
+       return await _identityDbContext.Users.Where(u => u.UserId != userId && u.Gender != gender).ToListAsync();
     }
 
     public async Task AddUser(User user)
