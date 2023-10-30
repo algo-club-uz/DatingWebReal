@@ -86,6 +86,10 @@ public class UserManager
             Lastname = user.LastName,
             CreateDate = user.CreateDate,
             Username = user.Email,
+            Age = user.Age,
+            Gender = user.Gender,
+            Country = user.Country,
+            PhotoUrl = user.PhotoUrl,
             //UserRole = user.UserRole
         };
         return model;
