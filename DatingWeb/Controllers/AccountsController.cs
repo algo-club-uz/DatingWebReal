@@ -32,8 +32,8 @@ public class AccountsController : ControllerBase
         try
         {
             var user = await _userManager.GetUser(userId);
-            var users = _userManager.GetAllUser(user.UserId, user.Gender);
-            return Ok(user);
+            var users = await _userManager.GetAllUser(user.UserId, user.Gender);
+            return Ok(users);
 
         }
         catch (UserNotFoundException e)
