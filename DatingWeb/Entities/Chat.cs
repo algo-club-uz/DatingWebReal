@@ -11,6 +11,6 @@ public class Chat
     public List<Guid> UserIds { get; set; }
 
 
-    List<Message> Messages { get; set; }
+    public List<Message> Messages { get; set; }
 
 }
