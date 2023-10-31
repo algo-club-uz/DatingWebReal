@@ -37,7 +37,7 @@ public class ChatRepository: IChatRepository
         {
             chat = new Chat
             {
-                UserIds = {currentUserId,toUserId},
+                UserIds = new List<Guid>{currentUserId,toUserId},
                 Messages = new List<Message>()
             };
             _context.Chats.Add(chat);

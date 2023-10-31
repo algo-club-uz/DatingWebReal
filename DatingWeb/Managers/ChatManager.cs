@@ -28,7 +28,7 @@ public class ChatManager
     }
 
 
-    public async Task<ChatModel> StartOrContinueChat(Guid currentUserId, Guid toUserId)
+    public async Task<ChatModel?> StartOrContinueChat(Guid currentUserId, Guid toUserId)
     {
         var chat = await _chatRepository.StartOrContinueChat(currentUserId, toUserId);
         var chatModel = ToModel(chat);
@@ -48,31 +48,39 @@ public class ChatManager
         return "Deleted";
     }
 
-    private ChatModel ToModel(Chat chat)
+    private ChatModel? ToModel(Chat chat)
     {
-        
-        var usernames = new List<string>();
-        foreach (var userId in chat.UserIds)
+        if (chat is not null )
         {
-            usernames.Add( _chatRepository.FindUsername(userId));
+            var usernames = new List<string>();
+            foreach (var userId in chat.UserIds)
+            {
+                usernames.Add(_chatRepository.FindUsername(userId));
+            }
+            var model = new ChatModel
+            {
+                ChatId = chat.ChatId,
+                Usernames = usernames,
+                Messages = ToModels(chat.Messages)
+            };
+            return model;
         }
-        var model = new ChatModel
-        {
-            ChatId = chat.ChatId,
-            Usernames = usernames,
-            Messages = ToModels(chat.Messages)
-        };
-        return model;
+        return null;
     }
 
-    private List<ChatModel> ToModels(List<Chat> chats)
+    private List<ChatModel?> ToModels(List<Chat> chats)
     {
-        var models = new List<ChatModel>();
-        foreach (var chat in chats)
+        if (chats is not null)
         {
-            models.Add(ToModel(chat));
+            var models = new List<ChatModel>();
+            foreach (var chat in chats)
+            {
+                models.Add(ToModel(chat));
+            }
+            return models;
         }
-        return models;
+
+        return null;
     }
 
     private MessageModel ToModel(Message message)
@@ -87,13 +95,17 @@ public class ChatManager
         return model;
     }
 
-    private List<MessageModel> ToModels(List<Message> messages)
+    private List<MessageModel>? ToModels(List<Message> messages)
     {
-        var models = new List<MessageModel>();
-        foreach (var message in messages)
+        if (messages is not null)
         {
-            models.Add(ToModel(message));
+            var models = new List<MessageModel>();
+            foreach (var message in messages)
+            {
+                models.Add(ToModel(message));
+            }
+            return models;
         }
-        return models;
+        return null;
     }
 }
