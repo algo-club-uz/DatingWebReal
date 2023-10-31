@@ -1,6 +1,8 @@
 ﻿using DatingWeb.Managers;
 using DatingWeb.Options;
 using DatingWeb.Providers;
+using DatingWeb.Repositories.Interfaces;
+using DatingWeb.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -38,6 +40,9 @@ public static  class ServiceCollectionExtensions
         services.AddScoped<UserManager>();
         services.AddHttpContextAccessor();
         services.AddScoped<UserProvider>();
+        services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<IChatRepository, ChatRepository>();
+        services.AddScoped<ChatManager>();
     }
 
 }

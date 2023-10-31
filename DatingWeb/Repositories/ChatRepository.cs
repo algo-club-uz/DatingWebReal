@@ -57,4 +57,10 @@ public class ChatRepository: IChatRepository
         _context.Messages.Remove(message);
         await _context.SaveChangesAsync();
     }
+
+    public string FindUsername(Guid userId)
+    {
+        var user =  _context.Users.FirstOrDefault(u => u.UserId == userId);
+        return user.Email;
+    }
 }

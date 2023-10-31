@@ -1,4 +1,6 @@
-﻿using DatingWeb.Repositories.Interfaces;
+﻿using DatingWeb.Entities;
+using DatingWeb.Models;
+using DatingWeb.Repositories.Interfaces;
 
 namespace DatingWeb.Managers;
 
@@ -9,5 +11,74 @@ public class ChatManager
     public ChatManager(IChatRepository chatRepository)
     {
         _chatRepository = chatRepository;
+    }
+
+    public async Task<ChatModel> StartOrContinueChat(Guid currentUserId, Guid toUserId)
+    {
+        var chat = await _chatRepository.StartOrContinueChat(currentUserId, toUserId);
+        var chatModel = ToModel(chat);
+        return chatModel;
+    }
+
+    public async Task<MessageModel> SendMessage(Guid fromUserId, Guid toUserId, string text)
+    {
+        var message = await _chatRepository.SendMessage(fromUserId: fromUserId, toUserId: toUserId, text);
+        var messageModel = ToModel(message);
+        return messageModel;
+    }
+
+    public async Task<string> DeleteMessage(Guid messageId)
+    {
+        await _chatRepository.DeleteMessage(messageId);
+        return "Deleted";
+    }
+
+    private ChatModel ToModel(Chat chat)
+    {
+        
+        var usernames = new List<string>();
+        foreach (var userId in chat.UserIds)
+        {
+            usernames.Add( _chatRepository.FindUsername(userId));
+        }
+        var model = new ChatModel
+        {
+            ChatId = chat.ChatId,
+            Usernames = usernames,
+            Messages = ToModels(chat.Messages)
+        };
+        return model;
+    }
+
+    private List<ChatModel> ToModels(List<Chat> chats)
+    {
+        var models = new List<ChatModel>();
+        foreach (var chat in chats)
+        {
+            models.Add(ToModel(chat));
+        }
+        return models;
+    }
+
+    private MessageModel ToModel(Message message)
+    {
+        var model = new MessageModel
+        {
+            MessageId = message.MessageId,
+            FromUser = _chatRepository.FindUsername(message.FromUser),
+            ToUser = _chatRepository.FindUsername(message.ToUser),
+            Text = message.Text
+        };
+        return model;
+    }
+
+    private List<MessageModel> ToModels(List<Message> messages)
+    {
+        var models = new List<MessageModel>();
+        foreach (var message in messages)
+        {
+            models.Add(ToModel(message));
+        }
+        return models;
     }
 }
