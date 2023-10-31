@@ -44,6 +44,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("AppDbContext"));
 });
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
 builder.Services.AddIdentity(builder.Configuration);
 var app = builder.Build();
 
