@@ -22,6 +22,4 @@ public class User
     public DateTime CreateDate { get; set; } = DateTime.UtcNow;
 
     public List<Chat> Chats { get; set; }
-
-
 }
