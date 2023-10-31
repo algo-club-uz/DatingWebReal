@@ -6,5 +6,5 @@ public interface IChatRepository
 {
     Task<Chat> StartOrContinueChat(Guid currentUserId, Guid toUserId);
     Task<Message> SendMessage(Guid fromUserId, Guid toUserId, string message);
-    Task DeleteMessage(Guid fromUserId, Guid toUserId, Guid messageId);
+    Task DeleteMessage( Guid messageId);
 }

@@ -38,13 +38,23 @@ public class ChatRepository: IChatRepository
         return chat;
     }
 
-    public async Task<Message> SendMessage(Guid fromUserId, Guid toUserId, string message)
+    public async Task<Message> SendMessage(Guid fromUserId, Guid toUserId, string text)
     {
-        throw new NotImplementedException();
+        var message = new Message
+        {
+            ToUser = toUserId,
+            FromUser = fromUserId,
+            Text = text
+        };
+        _context.Messages.Add(message);
+        await _context.SaveChangesAsync();
+        return message;
     }
 
-    public async Task DeleteMessage(Guid fromUserId, Guid toUserId, Guid messageId)
+    public async Task DeleteMessage(Guid messageId)
     {
-        throw new NotImplementedException();
+        var message = await _context.Messages.FindAsync(messageId);
+        _context.Messages.Remove(message);
+        await _context.SaveChangesAsync();
     }
 }
