@@ -14,6 +14,21 @@ public class ChatRepository: IChatRepository
         _context = context;
     }
 
+    public async Task<List<Chat>> GetChats(Guid currentUserId)
+    {
+        var chats = await _context.Chats.
+            Where(c => c.UserIds.Contains(currentUserId))
+            .ToListAsync();
+        return chats;
+    }
+
+    public async Task<Chat> GetChat(Guid currentUserId, Guid userId)
+    {
+        var chat = await _context.Chats.FirstOrDefaultAsync(c =>
+            c.UserIds.Contains(currentUserId) && c.UserIds.Contains(userId));
+        return chat;
+    }
+
     public async Task<Chat> StartOrContinueChat(Guid currentUserId, Guid toUserId)
     {
         var chat = await _context.Chats.FirstOrDefaultAsync(c =>
