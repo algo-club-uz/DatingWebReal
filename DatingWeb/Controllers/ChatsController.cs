@@ -13,7 +13,7 @@ public class ChatsController : ControllerBase
 {
     private readonly ChatManager _chatManager; 
     private readonly UserProvider _userProvider;
-    private  Guid CurrentUserId => _userProvider.UserId;
+    private Guid CurrentUserId;
 
     public ChatsController(ChatManager chatManager, UserProvider userProvider)
     {
@@ -22,15 +22,17 @@ public class ChatsController : ControllerBase
     }
 
     [HttpGet("GetChats")]
-    public async Task<IActionResult> GetChats(Guid currentUserId)
+    public async Task<IActionResult> GetChats()
     {
-        var chats = await _chatManager.GetChats(currentUserId);
+        CurrentUserId = _userProvider.UserId;
+        var chats = await _chatManager.GetChats(CurrentUserId);
         return Ok(chats);
     }
 
     [HttpGet("GetChat")]
     public async Task<IActionResult> GetChat(Guid userId)
     {
+        CurrentUserId = _userProvider.UserId;
         var chat = await _chatManager.GetChat(CurrentUserId, userId);
         return Ok(chat);
     }
@@ -38,6 +40,7 @@ public class ChatsController : ControllerBase
     [HttpGet("StartOrContinueChat")]
     public async Task<IActionResult> StartOrContinueChat(Guid toUserId)
     {
+        CurrentUserId = _userProvider.UserId;
         var chat = await _chatManager.StartOrContinueChat(CurrentUserId, toUserId);
         return Ok(chat);
     }
@@ -45,6 +48,7 @@ public class ChatsController : ControllerBase
     [HttpPost("SendMessage")]
     public async Task<IActionResult> SendMessage(Guid toUserId, string text)
     {
+        CurrentUserId = _userProvider.UserId;
         var message = await _chatManager.SendMessage(CurrentUserId, toUserId, text);
         return Ok(message);
     }
