@@ -13,6 +13,21 @@ public class ChatManager
         _chatRepository = chatRepository;
     }
 
+    public async Task<List<ChatModel>> GetChats(Guid currentUserId)
+    {
+        var chats = await _chatRepository.GetChats(currentUserId);
+        var chatModels = ToModels(chats);
+        return chatModels;
+    }
+
+    public async Task<ChatModel> GetChat(Guid currentUserId, Guid userId)
+    {
+        var chat = await _chatRepository.GetChat(currentUserId, userId);
+        var chatModel = ToModel(chat);
+        return chatModel;
+    }
+
+
     public async Task<ChatModel> StartOrContinueChat(Guid currentUserId, Guid toUserId)
     {
         var chat = await _chatRepository.StartOrContinueChat(currentUserId, toUserId);
