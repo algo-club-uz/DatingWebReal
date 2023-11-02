@@ -79,11 +79,22 @@ public class ChatRepository: IChatRepository
         throw new ChatNotFoundException(chatId.ToString());
     }
 
-    public async Task DeleteMessage(Guid messageId)
+    public async Task DeleteMessage(Guid chatId,Guid messageId)
     {
-        var message = await _context.Messages.FindAsync(messageId);
-        _context.Messages.Remove(message);
-        await _context.SaveChangesAsync();
+        var chat = await _context.Chats.FirstOrDefaultAsync(c => c.ChatId == chatId);
+        if (chat is not null)
+        {
+            var message = await _context.Messages.FindAsync(messageId);
+            if (message is not null)
+            {
+                _context.Messages.Remove(message);
+                await _context.SaveChangesAsync();
+            }
+
+            throw new Exception($"Message not found with {messageId}");
+        }
+
+        throw new ChatNotFoundException(chatId.ToString());
     }
 
     public string FindUsername(Guid userId)

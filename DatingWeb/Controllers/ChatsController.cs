@@ -1,5 +1,4 @@
 ﻿using DatingWeb.Managers;
-using DatingWeb.Models;
 using DatingWeb.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -56,6 +55,6 @@ public class ChatsController : ControllerBase
     [HttpGet("{chatId}/DeleteMessage")]
     public async Task<IActionResult> DeleteMessage(Guid chatId,Guid messageId)
     {
-        return Ok(await _chatManager.DeleteMessage(messageId));
+        return Ok(await _chatManager.DeleteMessage(chatId:chatId,messageId:messageId));
     }
 }
