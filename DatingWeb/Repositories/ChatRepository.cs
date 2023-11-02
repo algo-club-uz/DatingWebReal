@@ -69,7 +69,8 @@ public class ChatRepository: IChatRepository
             {
                 ToUser = toUserId,
                 FromUser = fromUserId,
-                Text = text
+                Text = text,
+                ChatId = chatId
             };
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();

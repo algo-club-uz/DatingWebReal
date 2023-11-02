@@ -8,6 +8,6 @@ public class Chat
 
     public List<Guid> UserIds { get; set; }
 
-    public List<Message> Messages { get; set; }
+    public virtual List<Message> Messages { get; set; }
 
 }

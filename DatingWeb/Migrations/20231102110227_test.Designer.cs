@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DatingWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231030082143_chatTable1")]
-    partial class chatTable1
+    [Migration("20231102110227_test")]
+    partial class test
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,6 +22,9 @@ namespace DatingWeb.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -52,6 +55,9 @@ namespace DatingWeb.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("FromUser")
                         .HasColumnType("uuid");
 
@@ -63,6 +69,8 @@ namespace DatingWeb.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("MessageId");
+
+                    b.HasIndex("ChatId");
 
                     b.ToTable("Messages");
                 });
@@ -116,6 +124,22 @@ namespace DatingWeb.Migrations
                     b.HasOne("DatingWeb.Entities.User", null)
                         .WithMany("Chats")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("DatingWeb.Entities.Message", b =>
+                {
+                    b.HasOne("DatingWeb.Entities.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+                });
+
+            modelBuilder.Entity("DatingWeb.Entities.Chat", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("DatingWeb.Entities.User", b =>
