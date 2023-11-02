@@ -1,0 +1,55 @@
+﻿@page "/register"
+@using CommonFiles.Models
+@inject NavigationManager NavigationManager
+
+<div class="container">
+    <h1>Registration Form</h1>
+    <form method="POST">
+        <label for="Firstname">First Name:</label>
+        <input type="text" @bind="createUser.Firstname" id="Firstname" required>
+
+        <label for="LastName">Last Name:</label>
+        <input @bind="createUser.Lastname" type="text" id="LastName">
+
+        <label for="Username">Username</label>
+        <input @bind="createUser.Username" type="text" id="Username" required>
+
+        <label for="Password">Password:</label>
+        <input @bind="createUser.Password" type="password" id="Password" required>
+
+        <label for="ConfirmPassword">ConfirmPassword:</label>
+        <input @bind="createUser.ConfirmPassword" type="password" id="ConfirmPassword" required>
+
+        <label for="Country">Country:</label>
+        <input @bind="createUser.Country" type="text" id="Country">
+
+        <label for="Age">Age:</label>
+        <input @bind="createUser.Age" type="number" id="Age" required>
+
+        <label for="Gender">Gender:</label>
+        <select @bind="createUser.Gender" id="Gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+
+        <button @onclick="SignUp">Register</button>
+    </form>
+</div>
+@code
+{
+    private CreateUserModel createUser = new CreateUserModel();
+    private async Task SignUp()
+    {
+        string output = $"First Name: {createUser.Firstname}\n" +
+                        $"Last Name: {createUser.Lastname}\n" +
+                        $"Username: {createUser.Username}\n" +
+                        $"Password: {createUser.Password}\n" +
+                        $"Confirm Password: {createUser.ConfirmPassword}\n" +
+                        $"Country: {createUser.Country}\n" +
+                        $"Gender: {createUser.Gender}\n";
+
+        NavigationManager.NavigateTo($"/test/?Message={output}");
+        
+    }
+}
+

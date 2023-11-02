@@ -1,17 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CommonFiles.Enums;
 
 namespace CommonFiles.Models;
 
 public class CreateUserModel
 {
-    public required string Firstname { get; set; }
-    public required string Lastname { get; set; }
-    public required string Username { get; set; }
-    public required string Password { get; set; }
+    [Required]
+    public  string Firstname { get; set; }
+    [Required]
+    public  string Lastname { get; set; }
+    [Required]
+    public  string Username { get; set; }
+    [Required]
+    public  string Password { get; set; }
     [Compare(nameof(Password))]
-    public required string ConfirmPassword { get; set; }
+    [Required]
+    public  string ConfirmPassword { get; set; }
     public string? Country { get; set; }
     public int Age { get; set; }
-    public EGender Gender { get; set; }
+    public string Gender { get; set; }
 }
