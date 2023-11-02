@@ -1,7 +1,7 @@
 ﻿using CommonFiles.Enums;
+using CommonFiles.Models;
 using DatingWeb.Entities;
 using DatingWeb.Exceptions;
-using DatingWeb.Models;
 using DatingWeb.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -32,7 +32,7 @@ public class UserManager
             Email = model.Username,
             Age = model.Age,
             Country = model.Country,
-            Gender = model.Gender,
+            Gender = ParseToEnum(model.Gender),
             //UserRole = ERole.User
         };
 
@@ -93,5 +93,19 @@ public class UserManager
             //UserRole = user.UserRole
         };
         return model;
+    }
+
+    private EGender ParseToEnum(string text)
+    {
+        EGender gender;
+        if (text == "Male")
+        {
+            gender = EGender.Male;
+        }
+        else
+        {
+            gender = EGender.Female;
+        }
+        return gender;
     }
 }

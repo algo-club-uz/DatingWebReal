@@ -1,5 +1,5 @@
-﻿using DatingWeb.Entities;
-using DatingWeb.Models;
+﻿using CommonFiles.Models;
+using DatingWeb.Entities;
 using DatingWeb.Repositories.Interfaces;
 
 namespace DatingWeb.Managers;

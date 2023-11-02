@@ -1,6 +1,6 @@
-﻿using DatingWeb.Exceptions;
+﻿using CommonFiles.Models;
+using DatingWeb.Exceptions;
 using DatingWeb.Managers;
-using DatingWeb.Models;
 using DatingWeb.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
