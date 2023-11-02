@@ -28,14 +28,6 @@ public class ChatsController : ControllerBase
         return Ok(chats);
     }
 
-    [HttpGet("GetChat")]
-    public async Task<IActionResult> GetChat(Guid userId)
-    {
-        CurrentUserId = _userProvider.UserId;
-        var chat = await _chatManager.GetChat(CurrentUserId, userId);
-        return Ok(chat);
-    }
-
     [HttpGet("StartOrContinueChat")]
     public async Task<IActionResult> StartOrContinueChat(Guid toUserId)
     {

@@ -23,12 +23,12 @@ public class ChatRepository: IChatRepository
         return chats;
     }
 
-    public async Task<Chat> GetChat(Guid currentUserId, Guid userId)
+    /*public async Task<Chat> GetChat(Guid currentUserId, Guid userId)
     {
         var chat = await _context.Chats.FirstOrDefaultAsync(c =>
             c.UserIds.Contains(currentUserId) && c.UserIds.Contains(userId));
         return chat;
-    }
+    }*/
 
     public async Task<Chat> StartOrContinueChat(Guid currentUserId, Guid toUserId)
     {
