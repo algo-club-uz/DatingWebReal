@@ -12,7 +12,15 @@ public class AppDbContext:DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.UseLazyLoadingProxies();
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Chat>()
+            .HasMany(u => u.Messages)
+            .WithOne(b => b.Chat)
+            .HasForeignKey(b => b.ChatId);
     }
 
     public DbSet<User> Users { get; set; }

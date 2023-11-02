@@ -19,6 +19,9 @@ namespace DatingWeb.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.12")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -49,7 +52,7 @@ namespace DatingWeb.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ChatId")
+                    b.Property<Guid>("ChatId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("FromUser")
@@ -122,9 +125,13 @@ namespace DatingWeb.Migrations
 
             modelBuilder.Entity("DatingWeb.Entities.Message", b =>
                 {
-                    b.HasOne("DatingWeb.Entities.Chat", null)
+                    b.HasOne("DatingWeb.Entities.Chat", "Chat")
                         .WithMany("Messages")
-                        .HasForeignKey("ChatId");
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
                 });
 
             modelBuilder.Entity("DatingWeb.Entities.Chat", b =>
