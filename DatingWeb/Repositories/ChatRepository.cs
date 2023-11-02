@@ -1,5 +1,6 @@
 ﻿using DatingWeb.Context;
 using DatingWeb.Entities;
+using DatingWeb.Exceptions;
 using DatingWeb.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,26 +32,32 @@ public class ChatRepository: IChatRepository
 
     public async Task<Chat> StartOrContinueChat(Guid currentUserId, Guid toUserId)
     {
-        var chat = await _context.Chats.FirstOrDefaultAsync(c =>
-            c.UserIds.Contains(currentUserId) && c.UserIds.Contains(toUserId));
-        if (chat is null)
+        var toUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == toUserId);
+        if (toUser is not null)
         {
-            chat = new Chat
+            var chat = await _context.Chats.FirstOrDefaultAsync(c =>
+                c.UserIds.Contains(currentUserId) && c.UserIds.Contains(toUserId));
+            if (chat is null)
             {
-                UserIds = new List<Guid>{currentUserId,toUserId},
-                Messages = new List<Message>()
-            };
-            _context.Chats.Add(chat);
-           await _context.SaveChangesAsync();
-        }
-        else
-        {
-            chat.Messages = await _context.Messages.Where(m =>
-                (m.ToUser == toUserId && m.FromUser == currentUserId) ||
-                (m.ToUser == currentUserId && m.FromUser == toUserId)).ToListAsync();
+                chat = new Chat
+                {
+                    UserIds = new List<Guid> { currentUserId, toUserId },
+                    Messages = new List<Message>()
+                };
+                _context.Chats.Add(chat);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                chat.Messages = await _context.Messages.Where(m =>
+                    (m.ToUser == toUserId && m.FromUser == currentUserId) ||
+                    (m.ToUser == currentUserId && m.FromUser == toUserId)).ToListAsync();
+            }
+
+            return chat;
         }
 
-        return chat;
+        throw new UserNotFoundException(toUserId.ToString());
     }
 
     public async Task<Message> SendMessage(Guid fromUserId, Guid toUserId, string text)

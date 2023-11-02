@@ -2,7 +2,7 @@
 
 public class UserNotFoundException : Exception
 {
-    public UserNotFoundException(string message): base($"User not foud with this {message}")
+    public UserNotFoundException(string message): base($"User not found with this {message}")
     {
         
     }
