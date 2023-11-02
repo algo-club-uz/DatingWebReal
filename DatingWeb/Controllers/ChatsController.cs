@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DatingWeb.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/[controller]/userId/")]
 [ApiController]
 [Authorize]
 public class ChatsController : ControllerBase
@@ -45,16 +45,16 @@ public class ChatsController : ControllerBase
         return Ok(chat);
     }
 
-    [HttpPost("SendMessage")]
-    public async Task<IActionResult> SendMessage(Guid toUserId, string text)
+    [HttpPost("{chatId}/SendMessage")]
+    public async Task<IActionResult> SendMessage(Guid chatId, Guid toUserId, string text)
     {
         CurrentUserId = _userProvider.UserId;
-        var message = await _chatManager.SendMessage(CurrentUserId, toUserId, text);
+        var message = await _chatManager.SendMessage(chatId:chatId,CurrentUserId, toUserId, text);
         return Ok(message);
     }
 
-    [HttpGet("DeleteMessage")]
-    public async Task<IActionResult> DeleteMessage(Guid messageId)
+    [HttpGet("{chatId}/DeleteMessage")]
+    public async Task<IActionResult> DeleteMessage(Guid chatId,Guid messageId)
     {
         return Ok(await _chatManager.DeleteMessage(messageId));
     }
