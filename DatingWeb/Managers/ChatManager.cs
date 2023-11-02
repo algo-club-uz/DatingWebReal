@@ -35,9 +35,9 @@ public class ChatManager
         return chatModel;
     }
 
-    public async Task<MessageModel> SendMessage(Guid fromUserId, Guid toUserId, string text)
+    public async Task<MessageModel> SendMessage(Guid chatId,Guid fromUserId, Guid toUserId, string text)
     {
-        var message = await _chatRepository.SendMessage(fromUserId: fromUserId, toUserId: toUserId, text);
+        var message = await _chatRepository.SendMessage(chatId:chatId,fromUserId: fromUserId, toUserId: toUserId, text);
         var messageModel = ToModel(message);
         return messageModel;
     }

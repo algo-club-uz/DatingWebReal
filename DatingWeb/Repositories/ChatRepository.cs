@@ -60,17 +60,23 @@ public class ChatRepository: IChatRepository
         throw new UserNotFoundException(toUserId.ToString());
     }
 
-    public async Task<Message> SendMessage(Guid fromUserId, Guid toUserId, string text)
+    public async Task<Message> SendMessage(Guid chatId,Guid fromUserId, Guid toUserId, string text)
     {
-        var message = new Message
+        var chat = await _context.Chats.FirstOrDefaultAsync(c => c.ChatId == chatId);
+        if (chat is not null)
         {
-            ToUser = toUserId,
-            FromUser = fromUserId,
-            Text = text
-        };
-        _context.Messages.Add(message);
-        await _context.SaveChangesAsync();
-        return message;
+            var message = new Message
+            {
+                ToUser = toUserId,
+                FromUser = fromUserId,
+                Text = text
+            };
+            _context.Messages.Add(message);
+            await _context.SaveChangesAsync();
+            return message;
+        }
+
+        throw new ChatNotFoundException(chatId.ToString());
     }
 
     public async Task DeleteMessage(Guid messageId)
