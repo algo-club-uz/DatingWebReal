@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using DatingWeb.Entities.Enums;
+using CommonFiles.Enums;
 
 namespace DatingWeb.Entities;
 

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using CommonFiles.Enums;
 
-namespace DatingWeb.Models;
+namespace CommonFiles.Models;
 
 public class CreateUserModel
 {

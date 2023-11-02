@@ -1,6 +1,6 @@
 ﻿using CommonFiles.Enums;
 
-namespace DatingWeb.Models;
+namespace CommonFiles.Models;
 
 public class UserModel
 {
