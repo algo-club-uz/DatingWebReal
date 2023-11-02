@@ -1,4 +1,4 @@
-﻿namespace DatingWeb.Entities.Enums;
+﻿namespace CommonFiles.Enums;
 
 public enum EGender
 {

@@ -1,5 +1,5 @@
-﻿using DatingWeb.Entities;
-using DatingWeb.Entities.Enums;
+﻿using CommonFiles.Enums;
+using DatingWeb.Entities;
 
 namespace DatingWeb.Repositories.Interfaces;
 

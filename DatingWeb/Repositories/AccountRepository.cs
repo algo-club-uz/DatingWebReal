@@ -1,6 +1,6 @@
-﻿using DatingWeb.Context;
+﻿using CommonFiles.Enums;
+using DatingWeb.Context;
 using DatingWeb.Entities;
-using DatingWeb.Entities.Enums;
 using DatingWeb.Exceptions;
 using DatingWeb.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
