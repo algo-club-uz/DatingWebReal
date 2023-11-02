@@ -8,6 +8,6 @@ public interface IChatRepository
     Task<Chat> GetChat(Guid currentUserId,Guid userId);
     Task<Chat> StartOrContinueChat(Guid currentUserId, Guid toUserId);
     Task<Message> SendMessage(Guid chatId,Guid fromUserId, Guid toUserId, string message);
-    Task DeleteMessage( Guid messageId);
+    Task DeleteMessage(Guid chatId,Guid messageId);
     string FindUsername(Guid userId);
 }

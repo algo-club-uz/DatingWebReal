@@ -42,9 +42,9 @@ public class ChatManager
         return messageModel;
     }
 
-    public async Task<string> DeleteMessage(Guid messageId)
+    public async Task<string> DeleteMessage(Guid chatId,Guid messageId)
     {
-        await _chatRepository.DeleteMessage(messageId);
+        await _chatRepository.DeleteMessage(chatId:chatId,messageId:messageId);
         return "Deleted";
     }
 
