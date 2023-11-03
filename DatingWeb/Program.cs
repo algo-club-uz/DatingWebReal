@@ -1,7 +1,5 @@
 using DatingWeb.Context;
 using DatingWeb.Extensions;
-using DatingWeb.Repositories;
-using DatingWeb.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -44,12 +42,23 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("AppDbContext"));
 });
 builder.Services.AddIdentity(builder.Configuration);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin", cfg =>
+    {
+        cfg.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
 var app = builder.Build();
 
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseCors("AllowOrigin");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

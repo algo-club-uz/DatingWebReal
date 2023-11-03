@@ -1,6 +1,9 @@
 ﻿@page "/register"
 @using CommonFiles.Models
+@using DatingFront.Services
 @inject NavigationManager NavigationManager
+@inject RequestService RequestService
+@inject HttpClient Http
 
 <div class="container">
     <h1>Registration Form</h1>
@@ -40,16 +43,8 @@
     private CreateUserModel createUser = new CreateUserModel();
     private async Task SignUp()
     {
-        string output = $"First Name: {createUser.Firstname}\n" +
-                        $"Last Name: {createUser.Lastname}\n" +
-                        $"Username: {createUser.Username}\n" +
-                        $"Password: {createUser.Password}\n" +
-                        $"Confirm Password: {createUser.ConfirmPassword}\n" +
-                        $"Country: {createUser.Country}\n" +
-                        $"Gender: {createUser.Gender}\n";
-
-        NavigationManager.NavigateTo($"/test/?Message={output}");
-        
+        //await RequestService.Register(model: createUser);
+        await Http.PostAsJsonAsync("/Accounts/login",createUser);
     }
 }
 
