@@ -3,7 +3,6 @@ using CommonFiles.Models;
 using DatingWeb.Entities;
 using DatingWeb.Exceptions;
 using DatingWeb.Repositories.Interfaces;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 
 namespace DatingWeb.Managers;
@@ -125,7 +124,7 @@ public class UserManager
                 user.Gender = ParseToEnum(model.Gender);
             }
 
-            if (model.Age is not null and 0)
+            if (model.Age is not null and not 0)
             {
                 user.Age = (int)model.Age;
             }

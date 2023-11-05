@@ -3,8 +3,8 @@ using DatingWeb.Exceptions;
 using DatingWeb.Managers;
 using DatingWeb.Providers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using File = DatingWeb.Providers.File;
 
 namespace DatingWeb.Controllers;
 
@@ -106,10 +106,10 @@ public class AccountsController : ControllerBase
 
     [HttpPost("edit/userId")]
     [Authorize]
-    public async Task<IActionResult> EditProfile(EditUserModel model, IFormFile? image)
+    public async Task<IActionResult> EditProfile([FromForm] File file,[FromForm] EditUserModel model )
     {
         var userId = _userProvider.UserId;
-        var result = await _userManager.EditAccount(userId, model, image);
+        var result = await _userManager.EditAccount(userId, model, file.Image);
         return Ok(result);
     }
 
