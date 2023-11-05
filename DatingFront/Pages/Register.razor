@@ -44,7 +44,7 @@
     private async Task SignUp()
     {
         //await RequestService.Register(model: createUser);
-        await Http.PostAsJsonAsync("/Accounts/login",createUser);
+        await Http.PostAsJsonAsync("/Accounts/Register",createUser);
     }
 }
 
