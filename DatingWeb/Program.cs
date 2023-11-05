@@ -45,20 +45,21 @@ builder.Services.AddIdentity(builder.Configuration);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowOrigin", cfg =>
+    options.AddPolicy("AllowOrigin", builder =>
     {
-        cfg.AllowAnyOrigin()
+        builder.WithOrigins("https://localhost:7099")
             .AllowAnyMethod()
-            .AllowAnyHeader();
+            .AllowAnyHeader()
+            .AllowCredentials();
     });
 });
 var app = builder.Build();
 
+app.UseCors("AllowOrigin");
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseCors("AllowOrigin");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

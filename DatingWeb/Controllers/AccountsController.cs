@@ -3,6 +3,7 @@ using DatingWeb.Exceptions;
 using DatingWeb.Managers;
 using DatingWeb.Providers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatingWeb.Controllers;
