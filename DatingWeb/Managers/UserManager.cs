@@ -36,6 +36,7 @@ public class UserManager
             Gender = ParseToEnum(model.Gender),
             //UserRole = ERole.User
         };
+        user.PhotoUrl = SaveAvatar(user.Gender);
 
         user.PasswordHash = new PasswordHasher<User>().HashPassword(user, model.Password);
         await _userRepository.AddUser(user);
@@ -56,15 +57,15 @@ public class UserManager
         return token;
     }
 
-    public async Task<List<UserModel>> GetAllUser(Guid userId,EGender gender)
+    public async Task<List<UserModel>> GetAllUser(Guid userId, EGender gender)
     {
-        var users = await _userRepository.GetAllUser(userId,gender);
+        var users = await _userRepository.GetAllUser(userId, gender);
         var userModels = new List<UserModel>();
-         foreach (var user in users)
-         {
-             userModels.Add(ParseToUserModel(user));
-         }
-         return userModels;
+        foreach (var user in users)
+        {
+            userModels.Add(ParseToUserModel(user));
+        }
+        return userModels;
     }
 
     public async Task<UserModel?> GetUser(string username)
@@ -78,16 +79,19 @@ public class UserManager
         return ParseToUserModel(user);
     }
 
-    public async Task<UserModel> EditAccount(Guid userId,EditUserModel model, IFormFile? image)
+    public async Task<UserModel> EditAccount(Guid userId, EditUserModel model, IFormFile? image)
     {
         var user = await _userRepository.GetUserById(userId);
-            string wwRootPath = _webHostEnvironment.WebRootPath;
-            if (image != null)
-            {
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                string productPath = Path.Combine(wwRootPath, @"images\user");
+        string wwRootPath = _webHostEnvironment.WebRootPath;
+        if (image != null)
+        {
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+            string productPath = Path.Combine(wwRootPath, @"images\user");
 
-                if (!string.IsNullOrEmpty(user.PhotoUrl))
+            if (!string.IsNullOrEmpty(user.PhotoUrl))
+            {
+                if (user.PhotoUrl != @"\images\user\male_avatar.jpg" &&
+                    user.PhotoUrl != @"\images\user\male_avatar.jpg")
                 {
                     //delete the old image
                     var oldImagePath = Path
@@ -98,40 +102,41 @@ public class UserManager
                         System.IO.File.Delete(oldImagePath);
                     }
                 }
-
-                await using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
-                {
-                    await image.CopyToAsync(fileStream);
-                }
-
-                user.PhotoUrl = @"\images\user\" + fileName;
             }
 
-            if (!string.IsNullOrEmpty(model.FirstName))
+            await using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
             {
-                user.FirstName = model.FirstName;
-            }
-            if (!string.IsNullOrEmpty(model.LastName))
-            {
-                user.LastName = model.LastName;
-            }
-            if (!string.IsNullOrEmpty(model.Country))
-            {
-                user.Country = model.Country;
-            }
-            if (!string.IsNullOrEmpty(model.Gender))
-            {
-                user.Gender = ParseToEnum(model.Gender);
+                await image.CopyToAsync(fileStream);
             }
 
-            if (model.Age is not null and not 0)
-            {
-                user.Age = (int)model.Age;
-            }
+            user.PhotoUrl = @"\images\user\" + fileName;
+        }
 
-            await _userRepository.EditAccount(user);
+        if (!string.IsNullOrEmpty(model.FirstName))
+        {
+            user.FirstName = model.FirstName;
+        }
+        if (!string.IsNullOrEmpty(model.LastName))
+        {
+            user.LastName = model.LastName;
+        }
+        if (!string.IsNullOrEmpty(model.Country))
+        {
+            user.Country = model.Country;
+        }
+        if (!string.IsNullOrEmpty(model.Gender))
+        {
+            user.Gender = ParseToEnum(model.Gender);
+        }
 
-            return ParseToUserModel(user);
+        if (model.Age is not null and not 0)
+        {
+            user.Age = (int)model.Age;
+        }
+
+        await _userRepository.EditAccount(user);
+
+        return ParseToUserModel(user);
 
     }
 
@@ -157,5 +162,17 @@ public class UserManager
     {
         var gender = text == "Male" ? EGender.Male : EGender.Female;
         return gender;
+    }
+
+    private string SaveAvatar(EGender gender)
+    {
+        if (gender is EGender.Male)
+        {
+            return @"\images\user\male_avatar.jpg";
+        }
+        else
+        {
+            return @"\images\user\female_avatar.jpg";
+        }
     }
 }
