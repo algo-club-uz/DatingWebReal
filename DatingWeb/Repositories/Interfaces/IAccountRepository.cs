@@ -11,4 +11,6 @@ public interface IAccountRepository
     Task<User> GetUserById(Guid userId);
     Task<bool> IsUserNameExist(string userName);
 
+    Task EditAccount(User user);
+
 }
