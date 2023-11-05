@@ -3,6 +3,7 @@ using CommonFiles.Models;
 using DatingWeb.Entities;
 using DatingWeb.Exceptions;
 using DatingWeb.Repositories.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 
 namespace DatingWeb.Managers;
@@ -11,11 +12,12 @@ public class UserManager
 {
     private readonly IAccountRepository _userRepository;
     private readonly JwtTokenManager _jwtTokenManager;
-
-    public UserManager(JwtTokenManager jwtTokenManager, IAccountRepository userRepository)
+    private readonly IWebHostEnvironment _webHostEnvironment;
+    public UserManager(JwtTokenManager jwtTokenManager, IAccountRepository userRepository, IWebHostEnvironment webHostEnvironment)
     {
         _jwtTokenManager = jwtTokenManager;
         _userRepository = userRepository;
+        _webHostEnvironment = webHostEnvironment;
     }
 
 
@@ -77,6 +79,63 @@ public class UserManager
         return ParseToUserModel(user);
     }
 
+    public async Task<UserModel> EditAccount(Guid userId,EditUserModel model, IFormFile? image)
+    {
+        var user = await _userRepository.GetUserById(userId);
+            string wwRootPath = _webHostEnvironment.WebRootPath;
+            if (image != null)
+            {
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                string productPath = Path.Combine(wwRootPath, @"images\user");
+
+                if (!string.IsNullOrEmpty(user.PhotoUrl))
+                {
+                    //delete the old image
+                    var oldImagePath = Path
+                        .Combine(wwRootPath, user.PhotoUrl.TrimStart('\\'));
+
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
+                await using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                {
+                    await image.CopyToAsync(fileStream);
+                }
+
+                user.PhotoUrl = @"\images\user\" + fileName;
+            }
+
+            if (!string.IsNullOrEmpty(model.FirstName))
+            {
+                user.FirstName = model.FirstName;
+            }
+            if (!string.IsNullOrEmpty(model.LastName))
+            {
+                user.LastName = model.LastName;
+            }
+            if (!string.IsNullOrEmpty(model.Country))
+            {
+                user.Country = model.Country;
+            }
+            if (!string.IsNullOrEmpty(model.Gender))
+            {
+                user.Gender = ParseToEnum(model.Gender);
+            }
+
+            if (model.Age is not null and 0)
+            {
+                user.Age = (int)model.Age;
+            }
+
+            await _userRepository.EditAccount(user);
+
+            return ParseToUserModel(user);
+
+    }
+
     private UserModel ParseToUserModel(User user)
     {
         var model = new UserModel()
@@ -97,15 +156,7 @@ public class UserManager
 
     private EGender ParseToEnum(string text)
     {
-        EGender gender;
-        if (text == "Male")
-        {
-            gender = EGender.Male;
-        }
-        else
-        {
-            gender = EGender.Female;
-        }
+        var gender = text == "Male" ? EGender.Male : EGender.Female;
         return gender;
     }
 }

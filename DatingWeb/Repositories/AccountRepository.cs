@@ -54,4 +54,9 @@ public class AccountRepository: IAccountRepository
         return isExists;
     }
 
+    public async Task EditAccount(User user)
+    {
+        _identityDbContext.Users.Update(user);
+        await _identityDbContext.SaveChangesAsync();
+    }
 }

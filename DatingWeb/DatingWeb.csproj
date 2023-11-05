@@ -28,4 +28,8 @@
     <ProjectReference Include="..\CommonFiles\CommonFiles.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\user\" />
+  </ItemGroup>
+
 </Project>
