@@ -103,6 +103,16 @@ public class AccountsController : ControllerBase
      
 
     }
+
+    [HttpPost("edit/userId")]
+    [Authorize]
+    public async Task<IActionResult> EditProfile(EditUserModel model, IFormFile? image)
+    {
+        var userId = _userProvider.UserId;
+        var result = await _userManager.EditAccount(userId, model, image);
+        return Ok(result);
+    }
+
     [HttpPost("{userName}")]
     public async Task<IActionResult> GetUser(string userName)
     {
@@ -117,4 +127,5 @@ public class AccountsController : ControllerBase
         }
     
     }
+
 }
