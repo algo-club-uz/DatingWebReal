@@ -8,7 +8,7 @@ using File = DatingWeb.Providers.File;
 
 namespace DatingWeb.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/[controller]/")]
 [ApiController]
 public class AccountsController : ControllerBase
 {
