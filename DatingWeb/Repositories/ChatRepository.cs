@@ -106,12 +106,14 @@ public class ChatRepository: IChatRepository
 
     public async Task<List<Request>> GetRequests(Guid currentUserId)
     {
-        throw new NotImplementedException();
+        var requests = await _context.Requests.Where(r => r.ToUser == currentUserId).ToListAsync();
+        return requests;
     }
 
     public async Task SendRequest(Request request)
     {
-        throw new NotImplementedException();
+        _context.Requests.Add(request);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<Request> CheckRequest(Guid requestId)

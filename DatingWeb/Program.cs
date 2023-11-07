@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddCors();
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -47,9 +47,7 @@ builder.Services.AddIdentity(builder.Configuration);
 var app = builder.Build();
 app.UseCors(cors => cors
     .AllowAnyMethod()
-    .AllowAnyHeader()
-    .SetIsOriginAllowed(origin => true)
-    .AllowCredentials()
+    .AllowAnyHeader().AllowAnyOrigin()
 );
 
 
