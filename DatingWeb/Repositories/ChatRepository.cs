@@ -103,4 +103,19 @@ public class ChatRepository: IChatRepository
         var user =  _context.Users.FirstOrDefault(u => u.UserId == userId);
         return user.Email;
     }
+
+    public async Task<List<Request>> GetRequests(Guid currentUserId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task SendRequest(Request request)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<Request> CheckRequest(Guid requestId)
+    {
+        throw new NotImplementedException();
+    }
 }

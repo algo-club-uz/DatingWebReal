@@ -10,4 +10,10 @@ public interface IChatRepository
     Task<Message> SendMessage(Guid chatId,Guid fromUserId, Guid toUserId, string message);
     Task DeleteMessage(Guid chatId,Guid messageId);
     string FindUsername(Guid userId);
+
+    Task<List<Request>> GetRequests(Guid currentUserId);
+    Task SendRequest(Request  request);
+
+    Task<Request> CheckRequest(Guid requestId);
+
 }

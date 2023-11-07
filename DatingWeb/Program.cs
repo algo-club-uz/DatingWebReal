@@ -45,12 +45,12 @@ builder.Services.AddIdentity(builder.Configuration);
 
 
 var app = builder.Build();
-app.UseCors(cors =>
-{
-    cors.AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowAnyOrigin();
-});
+app.UseCors(cors => cors
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(origin => true)
+    .AllowCredentials()
+);
 
 
 app.UseSwagger();
