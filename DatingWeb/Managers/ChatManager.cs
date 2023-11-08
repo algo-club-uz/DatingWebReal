@@ -1,4 +1,5 @@
-﻿using CommonFiles.Models;
+﻿using CommonFiles.Enums;
+using CommonFiles.Models;
 using DatingWeb.Entities;
 using DatingWeb.Repositories.Interfaces;
 
@@ -46,6 +47,32 @@ public class ChatManager
     {
         await _chatRepository.DeleteMessage(chatId:chatId,messageId:messageId);
         return "Deleted";
+    }
+
+    public async Task<List<RequestModel>?> GetRequests(Guid currentUserId)
+    {
+        var requests = await _chatRepository.GetRequests(currentUserId: currentUserId);
+        return ToModels(requests);
+    }
+
+    public async Task<RequestModel?> CheckRequest(Guid requestId)
+    {
+        var request = await _chatRepository.CheckRequest(requestId:requestId);
+        return ToModel(request);
+    }
+
+    public async Task<RequestModel> SendRequest(Guid currentUserId,CreateRequestModel model)
+    {
+        var request = new Request()
+        {
+            FromUser = currentUserId,
+            ToUser = model.ToUser,
+            Text = CheckRequestText(currentUserId,model.Text),
+            Status = ERequest.Pending
+        };
+
+        await _chatRepository.SendRequest(request);
+        return ToModel(request)!;
     }
 
     private ChatModel? ToModel(Chat chat)
@@ -108,4 +135,48 @@ public class ChatManager
         }
         return null;
     }
+
+    private RequestModel? ToModel(Request? request)
+    {
+        if (request is not null)
+        {
+            var model = new RequestModel()
+            {
+                FromUser = _chatRepository.FindUsername(request.FromUser),
+                ToUser = _chatRepository.FindUsername(request.ToUser),
+                Text = request.Text,
+                Status = request.Status.ToString(),
+            };
+            return model;
+        }
+
+        return null;
+    }
+
+    private List<RequestModel>? ToModels(List<Request>? requests)
+    {
+        if (requests is not null)
+        {
+            var models = new List<RequestModel>();
+            foreach (var request in requests)
+            {
+                models.Add(ToModel(request)!);
+            }
+            return models;
+        }
+
+        return null;
+    }
+
+    private string CheckRequestText(Guid currentUserId,string text)
+    {
+        if (!string.IsNullOrEmpty(text))
+        {
+            return text;
+        }
+
+        var username = _chatRepository.FindUsername(currentUserId);
+        return $"Hi, I'm {username}. I want to chat with you. Please add me :)";
+    }
+
 }
