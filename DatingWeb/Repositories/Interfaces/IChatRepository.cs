@@ -14,6 +14,6 @@ public interface IChatRepository
     Task<List<Request>> GetRequests(Guid currentUserId);
     Task SendRequest(Request  request);
 
-    Task<Request> CheckRequest(Guid requestId);
+    Task<Request?> CheckRequest(Guid requestId);
 
 }

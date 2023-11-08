@@ -116,8 +116,9 @@ public class ChatRepository: IChatRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Request> CheckRequest(Guid requestId)
+    public async Task<Request?> CheckRequest(Guid requestId)
     {
-        throw new NotImplementedException();
+        var request = await _context.Requests.FirstOrDefaultAsync(r => r.RequestId == requestId);
+        return request;
     }
 }
