@@ -7,7 +7,7 @@
 
 <div class="container">
     <h1>Registration Form</h1>
-    <form method="POST">
+    <form >
         <label for="Firstname">First Name:</label>
         <input type="text" @bind="createUser.Firstname" id="Firstname" required>
 
@@ -35,7 +35,7 @@
             <option value="Female">Female</option>
         </select>
 
-        <button @onclick="SignUp">Register</button>
+        <button type ="button" @onclick="SignUp">Register</button>
     </form>
 </div>
 @code
@@ -45,6 +45,7 @@
     {
         await RequestService.Register(model: createUser);
         //await Http.PostAsJsonAsync("Accounts/Register",createUser);
+        NavigationManager.NavigateTo("/");
     }
 }
 

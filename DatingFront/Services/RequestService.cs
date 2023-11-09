@@ -23,7 +23,7 @@ public class RequestService
     {
         try
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "Accounts/register");
+            var request = new HttpRequestMessage(HttpMethod.Post, "/api/Accounts/register");
             request.Content = JsonContent.Create(model);
 
             using var response = await _httpClient.SendAsync(request);
