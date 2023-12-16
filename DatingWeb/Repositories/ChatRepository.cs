@@ -1,4 +1,5 @@
-﻿using DatingWeb.Context;
+﻿using CommonFiles.Enums;
+using DatingWeb.Context;
 using DatingWeb.Entities;
 using DatingWeb.Exceptions;
 using DatingWeb.Repositories.Interfaces;
@@ -120,5 +121,23 @@ public class ChatRepository: IChatRepository
     {
         var request = await _context.Requests.FirstOrDefaultAsync(r => r.RequestId == requestId);
         return request;
+    }
+
+    public async Task<List<User>> GetFriends(Guid currentUserId)
+    {
+        var acceptedRequests = await _context.Requests
+            .Where(r => r.ToUser == currentUserId && r.Status == ERequest.Accepted)
+            .ToListAsync();
+        var users = new List<User>();
+        foreach (var request in acceptedRequests)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == request.FromUser);
+            if (user is not null)
+            {
+                users.Add(user);
+            }
+        }
+
+        return users;
     }
 }
