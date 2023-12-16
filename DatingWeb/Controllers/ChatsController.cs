@@ -1,4 +1,6 @@
-﻿using DatingWeb.Managers;
+﻿using CommonFiles.Models;
+using DatingWeb.Exceptions;
+using DatingWeb.Managers;
 using DatingWeb.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +14,7 @@ public class ChatsController : ControllerBase
 {
     private readonly ChatManager _chatManager; 
     private readonly UserProvider _userProvider;
-    private Guid CurrentUserId;
+    private Guid currentUserId;
 
     public ChatsController(ChatManager chatManager, UserProvider userProvider)
     {
@@ -23,25 +25,46 @@ public class ChatsController : ControllerBase
     [HttpGet("GetChats")]
     public async Task<IActionResult> GetChats()
     {
-        CurrentUserId = _userProvider.UserId;
-        var chats = await _chatManager.GetChats(CurrentUserId);
-        return Ok(chats);
+        currentUserId = _userProvider.UserId;
+        try
+        {
+            var chats = await _chatManager.GetChats(currentUserId);
+            return Ok(chats);
+        }
+        catch (UserNotFoundException e)
+        {
+            return Unauthorized();
+        }
     }
 
     [HttpGet("StartOrContinueChat")]
     public async Task<IActionResult> StartOrContinueChat(Guid toUserId)
     {
-        CurrentUserId = _userProvider.UserId;
-        var chat = await _chatManager.StartOrContinueChat(CurrentUserId, toUserId);
-        return Ok(chat);
+        currentUserId = _userProvider.UserId;
+        try
+        {
+            var chat = await _chatManager.StartOrContinueChat(currentUserId, toUserId);
+            return Ok(chat);
+        }
+        catch (UserNotFoundException e)
+        {
+            return Unauthorized();
+        }
     }
 
     [HttpPost("{chatId}/SendMessage")]
     public async Task<IActionResult> SendMessage(Guid chatId, Guid toUserId, string text)
     {
-        CurrentUserId = _userProvider.UserId;
-        var message = await _chatManager.SendMessage(chatId:chatId,CurrentUserId, toUserId, text);
-        return Ok(message);
+        currentUserId = _userProvider.UserId;
+        try
+        {
+            var message = await _chatManager.SendMessage(chatId: chatId, currentUserId, toUserId, text);
+            return Ok(message);
+        }
+        catch (UserNotFoundException e)
+        {
+            return Unauthorized();
+        }
     }
 
     [HttpGet("{chatId}/DeleteMessage")]
@@ -49,4 +72,37 @@ public class ChatsController : ControllerBase
     {
         return Ok(await _chatManager.DeleteMessage(chatId:chatId,messageId:messageId));
     }
+
+    [HttpGet("GetFriends")]
+    public async Task<IActionResult> GetFriends()
+    {
+        try
+        {
+            return Ok(await _chatManager.GetFriends(_userProvider.UserId));
+        }
+        catch (UserNotFoundException e)
+        {
+            return Unauthorized();
+        }
+    }
+
+    [HttpGet("{requestId}/CheckRequest")]
+    public async Task<IActionResult> CheckRequest(Guid requestId)
+    {
+        return Ok(await _chatManager.CheckRequest(requestId));
+    }
+
+    [HttpGet("SendRequest")]
+    public async Task<IActionResult> SendRequest(CreateRequestModel model)
+    {
+        try
+        {
+            return Ok(await _chatManager.SendRequest(_userProvider.UserId,model));
+        }
+        catch (UserNotFoundException e)
+        {
+            return Unauthorized();
+        }
+    }
+
 }
