@@ -19,6 +19,9 @@ public class User
     public string? PhotoUrl { get; set; }
     public  int Age { get; set; }
     public  EGender Gender { get; set; }
+
+    public string Bio { get; set; }
+
     public DateTime CreateDate { get; set; } = DateTime.UtcNow;
 
     public virtual List<Chat> Chats { get; set; }

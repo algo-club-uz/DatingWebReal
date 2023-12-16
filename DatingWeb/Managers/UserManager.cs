@@ -134,6 +134,11 @@ public class UserManager
             user.Age = (int)model.Age;
         }
 
+        if (!string.IsNullOrEmpty(model.Bio))
+        {
+            user.Bio = model.Bio;
+        }
+
         await _userRepository.EditAccount(user);
 
         return ParseToUserModel(user);
