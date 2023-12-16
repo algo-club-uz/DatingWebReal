@@ -76,7 +76,7 @@ public class ChatManager
         return ToModel(request)!;
     }
 
-    private async Task<List<UserModel>> GetFriends(Guid currentUserId)
+    public async Task<List<UserModel>> GetFriends(Guid currentUserId)
     {
         var users = await _chatRepository.GetFriends(currentUserId);
 
