@@ -1,6 +1,7 @@
 ﻿using CommonFiles.Enums;
 using CommonFiles.Models;
 using DatingWeb.Entities;
+using DatingWeb.Extensions;
 using DatingWeb.Repositories.Interfaces;
 
 namespace DatingWeb.Managers;
@@ -73,6 +74,13 @@ public class ChatManager
 
         await _chatRepository.SendRequest(request);
         return ToModel(request)!;
+    }
+
+    private async Task<List<UserModel>> GetFriends(Guid currentUserId)
+    {
+        var users = await _chatRepository.GetFriends(currentUserId);
+
+        return UserExtension.ParseToListUserModel(users);
     }
 
     private ChatModel? ToModel(Chat chat)

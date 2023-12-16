@@ -2,6 +2,7 @@
 using CommonFiles.Models;
 using DatingWeb.Entities;
 using DatingWeb.Exceptions;
+using DatingWeb.Extensions;
 using DatingWeb.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -40,7 +41,7 @@ public class UserManager
 
         user.PasswordHash = new PasswordHasher<User>().HashPassword(user, model.Password);
         await _userRepository.AddUser(user);
-        return ParseToUserModel(user);
+        return user.ParseToUserModel();
     }
 
     public async Task<string> Login(LoginUserModel model)
@@ -60,23 +61,18 @@ public class UserManager
     public async Task<List<UserModel>> GetAllUser(Guid userId, EGender gender)
     {
         var users = await _userRepository.GetAllUser(userId, gender);
-        var userModels = new List<UserModel>();
-        foreach (var user in users)
-        {
-            userModels.Add(ParseToUserModel(user));
-        }
-        return userModels;
+        return UserExtension.ParseToListUserModel(users);
     }
 
     public async Task<UserModel?> GetUser(string username)
     {
         var user = await _userRepository.GetUserByUserName(username);
-        return ParseToUserModel(user);
+        return user.ParseToUserModel();
     }
     public async Task<UserModel?> GetUser(Guid id)
     {
         var user = await _userRepository.GetUserById(id);
-        return ParseToUserModel(user);
+        return user.ParseToUserModel();
     }
 
     public async Task<UserModel> EditAccount(Guid userId, EditUserModel model, IFormFile? image)
@@ -141,26 +137,8 @@ public class UserManager
 
         await _userRepository.EditAccount(user);
 
-        return ParseToUserModel(user);
+        return user.ParseToUserModel();
 
-    }
-
-    private UserModel ParseToUserModel(User user)
-    {
-        var model = new UserModel()
-        {
-            UserId = user.UserId,
-            Firstname = user.FirstName,
-            Lastname = user.LastName,
-            CreateDate = user.CreateDate,
-            Username = user.Email,
-            Age = user.Age,
-            Gender = user.Gender,
-            Country = user.Country,
-            PhotoUrl = user.PhotoUrl,
-            //UserRole = user.UserRole
-        };
-        return model;
     }
 
     private EGender ParseToEnum(string text)
