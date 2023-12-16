@@ -1,6 +1,7 @@
 ﻿version: '3.7'
 
 services:
+
   dating_db:
     image: postgres:latest
     container_name: dating_db
@@ -13,3 +14,8 @@ services:
       - dating_db_data:/var/lib/postgresql/data/
 volumes:
   dating_db_data:
+
+  
+networks:
+  oracle-network:
+    driver: bridge  
