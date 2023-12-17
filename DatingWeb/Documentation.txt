@@ -1,0 +1,3 @@
+﻿#Accounts
+# 1 Get
+https://localhost:7273/api/Accounts
